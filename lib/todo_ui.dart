@@ -15,6 +15,7 @@ class TodoList extends StatefulWidget {
 class _TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -32,7 +33,12 @@ class _TodoListState extends State<TodoList> {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Center(child: Text("Confirm Logout", style: TextStyle(fontWeight: FontWeight.bold),)),
+                    title: Center(
+                      child: Text(
+                        "Confirm Logout",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     content: const Text("Are you sure you want to logout?"),
                     actions: [
                       TextButton(
@@ -54,19 +60,21 @@ class _TodoListState extends State<TodoList> {
                             (route) => false,
                           );
                         },
-                      child: const Text("Logout"),)
+                        child: const Text("Logout"),
+                      ),
                     ],
                   );
                 },
               );
             },
-           
           ),
         ],
       ),
 
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(uid)
             .collection("todos")
             .orderBy("createdAt", descending: true)
             .snapshots(),

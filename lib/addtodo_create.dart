@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -141,6 +142,7 @@ class _AddtodoState extends State<Addtodo> {
   Future<void> submitData() async {
     final title = titleController.text.trim();
     final description = descriptionController.text.trim();
+    final uid = FirebaseAuth.instance.currentUser!.uid;
 
     if (!_formkey.currentState!.validate()) {
       return;
@@ -149,12 +151,22 @@ class _AddtodoState extends State<Addtodo> {
     setState(() => isLoading = true);
 
     try {
-      await FirebaseFirestore.instance.collection("todos").add({
-        "title": title,
-        "description": description,
-        "createdAt": DateTime.now(),
-        "completed": false,
-      });
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(uid)
+          .collection("todos")
+          .add({
+            "title": title,
+            "description": description,
+            "completed": false,
+            "createdAt": FieldValue.serverTimestamp(),
+          });
+      // await FirebaseFirestore.instance.collection("todos").add({
+      //   "title": title,
+      //   "description": description,
+      //   "createdAt": DateTime.now(),
+      //   "completed": false,
+      // });
 
       if (!mounted) return;
 
