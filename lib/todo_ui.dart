@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/addtodo_create.dart';
 import 'package:todolist/auth/login_page.dart';
+import 'package:todolist/auth/profile_page.dart';
 import 'package:todolist/delete_todo_button.dart';
 
 class TodoList extends StatefulWidget {
@@ -25,49 +26,11 @@ class _TodoListState extends State<TodoList> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            tooltip: "Logout",
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Center(
-                      child: Text(
-                        "Confirm Logout",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    content: const Text("Are you sure you want to logout?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Cancel"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await FirebaseAuth.instance.signOut();
+          Padding(padding: EdgeInsets.only(right: 12),
+          child: ProfilePopupMenu(),)
 
-                          if (!mounted) return;
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const LoginPage(),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                        child: const Text("Logout"),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
+
+
         ],
       ),
 
