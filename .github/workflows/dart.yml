@@ -1,4 +1,4 @@
-name: Flutter CI (FVM)
+name: Flutter CI
 
 on:
   push:
@@ -11,12 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Flutter via FVM
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version-file: .fvm/fvm_config.json
+          channel: stable
 
       - name: Flutter version
         run: flutter --version
